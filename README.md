@@ -1,4 +1,4 @@
-# MTsocketAPI C# Libraries
+# MTsocketAPI C# Libraries (Beta)
 
 Libraries created to help developers to easily use the MTsocketAPI using C#
 
