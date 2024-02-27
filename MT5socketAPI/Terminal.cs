@@ -14,6 +14,51 @@ namespace MTsocketAPI.MT5
         ORDER_TYPE_BUY_STOP,
         ORDER_TYPE_SELL_STOP
     }
+
+    public enum TradeRetCode : long
+    {
+        TRADE_RETCODE_REQUOTE = 10004,
+        TRADE_RETCODE_REJECT = 1006,
+        TRADE_RETCODE_CANCEL = 10007,
+        TRADE_RETCODE_PLACED = 10008,
+        TRADE_RETCODE_DONE = 10009,
+        TRADE_RETCODE_DONE_PARTIAL = 10010,
+        TRADE_RETCODE_ERROR = 10011,
+        TRADE_RETCODE_TIMEOUT = 10012,
+        TRADE_RETCODE_INVALID = 10013,
+        TRADE_RETCODE_INVALID_VOLUME = 10014,
+        TRADE_RETCODE_INVALID_PRICE = 10015,
+        TRADE_RETCODE_INVALID_STOPS = 10016,
+        TRADE_RETCODE_TRADE_DISABLED = 10017,
+        TRADE_RETCODE_MARKET_CLOSED = 10018,
+        TRADE_RETCODE_NO_MONEY = 10019,
+        TRADE_RETCODE_PRICE_CHANGED = 10020,
+        TRADE_RETCODE_PRICE_OFF = 10021,
+        TRADE_RETCODE_INVALID_EXPIRATION = 10022,
+        TRADE_RETCODE_ORDER_CHANGED = 10023,
+        TRADE_RETCODE_TOO_MANY_REQUESTS = 10024,
+        TRADE_RETCODE_NO_CHANGES = 10025,
+        TRADE_RETCODE_SERVER_DISABLES_AT = 10026,
+        TRADE_RETCODE_CLIENT_DISABLES_AT = 10027,
+        TRADE_RETCODE_LOCKED = 10028,
+        TRADE_RETCODE_FROZEN = 10029,
+        TRADE_RETCODE_INVALID_FILL = 10030,
+        TRADE_RETCODE_CONNECTION = 10031,
+        TRADE_RETCODE_ONLY_REAL = 10032,
+        TRADE_RETCODE_LIMIT_ORDERS = 10033,
+        TRADE_RETCODE_LIMIT_VOLUME = 10034,
+        TRADE_RETCODE_INVALID_ORDER = 10035,
+        TRADE_RETCODE_POSITION_CLOSED = 10036,
+        TRADE_RETCODE_INVALID_CLOSE_VOLUME = 10038,
+        TRADE_RETCODE_CLOSE_ORDER_EXIST = 10039,
+        TRADE_RETCODE_LIMIT_POSITIONS = 10040,
+        TRADE_RETCODE_REJECT_CANCEL = 10041,
+        TRADE_RETCODE_LONG_ONLY = 10042,
+        TRADE_RETCODE_SHORT_ONLY = 10043,
+        TRADE_RETCODE_CLOSE_ONLY = 10044,
+        TRADE_RETCODE_FIFO_CLOSE = 10045,
+        TRADE_RETCODE_HEDGE_PROHIBITED = 10046
+    }
     public enum TimeFrame
     {
         PERIOD_M1,
@@ -70,7 +115,7 @@ namespace MTsocketAPI.MT5
     {
         public Terminal() { }
 
-        public string host = "localhost";
+        public string host = "127.0.0.1";
         public int cmd_port = 77;
         public int data_port = 78;
         static int bufferLen = 65536;
@@ -88,7 +133,7 @@ namespace MTsocketAPI.MT5
         /// MTsocketAPI version
         /// </summary>
         public string Version { get; set; }
-
+        private object sendCmdLock = new object();
         /// <summary>
         /// Send RAW JSON command to MTsocketAPI
         /// </summary>
@@ -96,35 +141,43 @@ namespace MTsocketAPI.MT5
         /// <returns>JSON reply</returns>
         public JObject SendCommand(JObject cmd)
         {
-            try
+            lock (sendCmdLock)
             {
-                byte[] data = Encoding.ASCII.GetBytes(cmd.ToString(Formatting.None) + "\r\n");
-
-                NetworkStream stream = tcpClient_cmd.GetStream();
-
-                stream.Write(data, 0, data.Length);
-
-                data = new byte[bufferLen];
-
-                string responseData = string.Empty;
-
-                int bytes;
-                do
+                try
                 {
-                    bytes = stream.Read(data, 0, bufferLen);
-                    responseData += Encoding.ASCII.GetString(data, 0, bytes);
-                } while (stream.DataAvailable || !responseData.EndsWith("\r\n"));
+                    //System.IO.File.AppendAllText("log.txt", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") +  " - IN: " + cmd.ToString(Formatting.None) + Environment.NewLine);
+                    byte[] data = Encoding.ASCII.GetBytes(cmd.ToString(Formatting.None) + "\r\n");
 
-                JObject? jresult = JsonConvert.DeserializeObject<JObject>(responseData);
+                    NetworkStream stream = tcpClient_cmd.GetStream();
+                    stream.ReadTimeout = 3000;
+                    stream.Write(data, 0, data.Length);
 
-                if (jresult != null)
-                    return jresult;
-                else
-                    throw new Exception("Error with deserialization in SendCommand");
-            }
-            catch (Exception)
-            {
-                throw;
+                    data = new byte[bufferLen];
+
+                    string responseData = string.Empty;
+
+                    int bytes;
+                    do
+                    {
+                        bytes = stream.Read(data, 0, bufferLen);
+                        responseData += Encoding.ASCII.GetString(data, 0, bytes);
+                        //System.Threading.Thread.Sleep(1000);
+                        //System.IO.File.AppendAllText("log.txt", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " - loop: " + responseData + Environment.NewLine);
+                    } while (stream.DataAvailable || !responseData.EndsWith("\r\n"));
+
+                    //System.IO.File.AppendAllText("log.txt", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " - OU: " + responseData + Environment.NewLine);
+
+                    JObject? jresult = JsonConvert.DeserializeObject<JObject>(responseData);
+
+                    if (jresult != null)
+                        return jresult;
+                    else
+                        throw new Exception("Error with deserialization in SendCommand");
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
         }
 
@@ -197,7 +250,7 @@ namespace MTsocketAPI.MT5
         /// <param name="cmd_port">MTsocketAPI command port</param>
         /// <param name="data_port">MTsocketAPI data port</param>
         /// <returns>True = connect successful, False = connect fail</returns>
-        public bool Connect(string host = "localhost", int cmd_port = 77, int data_port = 78)
+        public bool Connect(string host = "127.0.0.1", int cmd_port = 77, int data_port = 78)
         {
             try
             {
