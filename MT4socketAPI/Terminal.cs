@@ -550,6 +550,40 @@ namespace MTsocketAPI.MT4
             }
         }
 
+        public bool TrackPrices(List<Asset> symbols)
+        {
+            try
+            {
+                JObject json_cmd = new JObject();
+
+                json_cmd["MSG"] = "TRACK_PRICES";
+
+                JArray ja = new JArray();
+
+                symbols = symbols.Where(x => x.TRADE_MODE > 0).ToList();  //Avoid disabled symbols
+
+                foreach (Asset symbol in symbols)
+                    ja.Add(symbol.NAME);
+
+                json_cmd["SYMBOLS"] = ja;
+
+                JObject res = SendCommand(json_cmd);
+
+                if (res["ERROR_ID"].ToString() == "0")
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new Exception("Error with the command sent. ERROR_ID: " + res["ERROR_ID"] + " ERROR_DESCRIPTION: " + res["ERROR_DESCRIPTION"]);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public bool TrackPrices(List<string> symbols)
         {
             try
