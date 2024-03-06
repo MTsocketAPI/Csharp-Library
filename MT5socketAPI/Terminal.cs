@@ -134,6 +134,7 @@ namespace MTsocketAPI.MT5
         /// </summary>
         public string Version { get; set; }
         private object sendCmdLock = new object();
+
         /// <summary>
         /// Send RAW JSON command to MTsocketAPI
         /// </summary>
@@ -145,7 +146,6 @@ namespace MTsocketAPI.MT5
             {
                 try
                 {
-                    //System.IO.File.AppendAllText("log.txt", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") +  " - IN: " + cmd.ToString(Formatting.None) + Environment.NewLine);
                     byte[] data = Encoding.ASCII.GetBytes(cmd.ToString(Formatting.None) + "\r\n");
 
                     NetworkStream stream = tcpClient_cmd.GetStream();
@@ -161,11 +161,7 @@ namespace MTsocketAPI.MT5
                     {
                         bytes = stream.Read(data, 0, bufferLen);
                         responseData += Encoding.ASCII.GetString(data, 0, bytes);
-                        //System.Threading.Thread.Sleep(1000);
-                        //System.IO.File.AppendAllText("log.txt", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " - loop: " + responseData + Environment.NewLine);
                     } while (stream.DataAvailable || !responseData.EndsWith("\r\n"));
-
-                    //System.IO.File.AppendAllText("log.txt", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " - OU: " + responseData + Environment.NewLine);
 
                     JObject? jresult = JsonConvert.DeserializeObject<JObject>(responseData);
 
@@ -384,7 +380,6 @@ namespace MTsocketAPI.MT5
                 if (res["ERROR_ID"].ToString() == "0")
                 {
                     List<Position> opened = JsonConvert.DeserializeObject<List<Position>>(res["OPENED"].ToString());
-                    //List<Order> pending = JsonConvert.DeserializeObject<List<Order>>(res["PENDING"].ToString());
                     return opened;
                 }
                 else
@@ -523,7 +518,6 @@ namespace MTsocketAPI.MT5
 
                 if (res["ERROR_ID"].ToString() == "0")
                 {
-                    //return Convert.ToDouble(res["DATA_VALUES"]);
                     return JsonConvert.DeserializeObject<List<double>>(res["DATA_VALUES"].ToString());
                 }
                 else
