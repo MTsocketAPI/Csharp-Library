@@ -48,7 +48,7 @@ namespace MTsocketAPI.MT4
     }
     public class Terminal
     {
-        public string host = "localhost";
+        public string host = "127.0.0.1";
         public int cmd_port = 77;
         public int data_port = 78;
         static int bufferLen = 8192;
@@ -89,9 +89,6 @@ namespace MTsocketAPI.MT4
                 } while (stream.DataAvailable);
 
                 jresult = JsonConvert.DeserializeObject<JObject>(responseData);
-
-                //stream.Close();
-                //tcpClient_cmd.Close();
 
                 return jresult;
             }
@@ -437,7 +434,7 @@ namespace MTsocketAPI.MT4
 
                 if (res["ERROR_ID"].ToString() == "0")
                 {
-                    return res["TYPE"].ToString();//JsonConvert.DeserializeObject<AccountStatus>(res.ToString());
+                    return res["TYPE"].ToString();
                 }
                 else
                 {
