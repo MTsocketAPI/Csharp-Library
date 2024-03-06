@@ -946,6 +946,44 @@ namespace MTsocketAPI.MT5
         }
 
         /// <summary>
+        /// Start streaming prices from a list of symbols
+        /// </summary>
+        /// <param name="symbols">Asset List</param>
+        /// <returns>True if the command was executed successfully. Streaming data will be received on the data port</returns>
+        /// <exception cref="Exception"></exception>
+        public bool TrackPrices(List<Asset> symbols)
+        {
+            try
+            {
+                JObject json_cmd = new JObject();
+                json_cmd["MSG"] = "TRACK_PRICES";
+
+                symbols = symbols.Where(x => x.TRADE_MODE > 0).ToList(); //Avoid disabled symbols
+
+                JArray ja = new JArray();
+                foreach (Asset symbol in symbols)
+                    ja.Add(symbol.NAME);
+
+                json_cmd["SYMBOLS"] = ja;
+
+                JObject res = SendCommand(json_cmd);
+
+                if (res["ERROR_ID"].ToString() == "0")
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new Exception("Error with the command sent. ERROR_ID: " + res["ERROR_ID"] + " ERROR_DESCRIPTION: " + res["ERROR_DESCRIPTION"]);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Start streaming OHLC data from a list of symbols
         /// </summary>
         /// <param name="symbols">Symbol list</param>
@@ -963,6 +1001,47 @@ namespace MTsocketAPI.MT5
                 JArray ja = new JArray();
                 foreach (string symbol in symbols)
                     ja.Add(symbol);
+
+                json_cmd["SYMBOLS"] = ja;
+
+                JObject res = SendCommand(json_cmd);
+
+                if (res["ERROR_ID"].ToString() == "0")
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new Exception("Error with the command sent. ERROR_ID: " + res["ERROR_ID"] + " ERROR_DESCRIPTION: " + res["ERROR_DESCRIPTION"]);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Start streaming OHLC data from a list of symbols
+        /// </summary>
+        /// <param name="symbols">Asset list</param>
+        /// <param name="tf">TimeFrame</param>
+        /// <returns>True if the command was executed successfully</returns>
+        /// <exception cref="Exception"></exception>
+        public bool TrackOHLC(List<Asset> symbols, TimeFrame tf)
+        {
+            try
+            {
+                JObject json_cmd = new JObject();
+                json_cmd["MSG"] = "TRACK_OHLC";
+                json_cmd["TIMEFRAME"] = tf.ToString();
+
+                JArray ja = new JArray();
+
+                symbols = symbols.Where(x => x.TRADE_MODE > 0).ToList();
+                
+                foreach (Asset symbol in symbols)
+                    ja.Add(symbol.NAME);
 
                 json_cmd["SYMBOLS"] = ja;
 
