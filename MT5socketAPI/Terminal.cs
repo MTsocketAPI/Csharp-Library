@@ -246,7 +246,7 @@ namespace MTsocketAPI.MT5
         /// <param name="cmd_port">MTsocketAPI command port</param>
         /// <param name="data_port">MTsocketAPI data port</param>
         /// <returns>True = connect successful, False = connect fail</returns>
-        public bool Connect(string host = "127.0.0.1", int cmd_port = 77, int data_port = 78)
+        public bool Connect(string host = "127.0.0.1", int cmd_port = 71, int data_port = 72)
         {
             try
             {
@@ -485,7 +485,7 @@ namespace MTsocketAPI.MT5
         /// <param name="Shift">Shift</param>
         /// <param name="Num">Number of elements</param>
         /// <param name="Params">Parameters</param>
-        public List<double> Custom_Indicator(string Symbol, TimeFrame tf, string Indicator_Name, int Mode, int Shift, int Num = 1, List<string> Params = null)
+        public List<double> Custom_Indicator(string Symbol, TimeFrame tf, string Indicator_Name, int Index, int Num = 1, List<string> Params = null)
         {
             try
             {
@@ -494,8 +494,8 @@ namespace MTsocketAPI.MT5
                 json_cmd["SYMBOL"] = Symbol;
                 json_cmd["TIMEFRAME"] = tf.ToString();
                 json_cmd["INDICATOR_NAME"] = Indicator_Name;
-                json_cmd["MODE"] = Mode;
-                json_cmd["SHIFT"] = Shift;
+                json_cmd["INDEX"] = Index;
+                //json_cmd["SHIFT"] = Shift;
                 json_cmd["NUM"] = Num;
 
                 int i = 1;
