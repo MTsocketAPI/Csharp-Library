@@ -475,17 +475,16 @@ namespace MTsocketAPI.MT5
             }
         }
 
-        /// <summary>
-        /// Get data from a custom indicator using the Metatrader iCustom function. More Info: <see href="https://www.mql5.com/es/docs/indicators/icustom"/>
-        /// </summary>
-        /// <param name="Symbol">Symbol name</param>
-        /// <param name="tf">TimeFrame</param>
-        /// <param name="Indicator_Name">Indicator Name</param>
-        /// <param name="Mode">Mode</param>
-        /// <param name="Shift">Shift</param>
-        /// <param name="Num">Number of elements</param>
-        /// <param name="Params">Parameters</param>
-        public List<double> Custom_Indicator(string Symbol, TimeFrame tf, string Indicator_Name, int Index, int Num = 1, List<string> Params = null)
+		/// <summary>
+		/// Get data from a custom indicator using the Metatrader iCustom function. More Info: <see href="https://www.mql5.com/es/docs/indicators/icustom"/>
+		/// </summary>
+		/// <param name="Symbol">Symbol name</param>
+		/// <param name="tf">TimeFrame</param>
+		/// <param name="Indicator_Name">Indicator Name</param>
+		/// <param name="Index">Buffer Index</param>
+		/// <param name="Num">Number of elements</param>
+		/// <param name="Params">Parameters</param>
+		public List<double> Custom_Indicator(string Symbol, TimeFrame tf, string Indicator_Name, int Index, int Num = 1, List<string> Params = null)
         {
             try
             {
@@ -495,7 +494,6 @@ namespace MTsocketAPI.MT5
                 json_cmd["TIMEFRAME"] = tf.ToString();
                 json_cmd["INDICATOR_NAME"] = Indicator_Name;
                 json_cmd["INDEX"] = Index;
-                //json_cmd["SHIFT"] = Shift;
                 json_cmd["NUM"] = Num;
 
                 int i = 1;
