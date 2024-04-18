@@ -139,7 +139,7 @@ namespace MTsocketAPI.MT4
             } while (true);
         }
 
-        public bool Connect(string host = "localhost", int cmd_port = 77, int data_port = 78)
+        public bool Connect(string host = "localhost", int cmd_port = 71, int data_port = 72)
         {
             try
             {
@@ -303,7 +303,7 @@ namespace MTsocketAPI.MT4
             }
         }
 
-        public double Custom_Indicator(string Symbol, TimeFrame tf, string Indicator_Name, int Mode, int Shift, List<double> Param = null)
+        public double Custom_Indicator(string Symbol, TimeFrame tf, string Indicator_Name, int Mode, int Shift, List<string> Params = null)
         {
             try
             {
@@ -315,30 +315,21 @@ namespace MTsocketAPI.MT4
                 json_cmd["MODE"] = Mode;
                 json_cmd["SHIFT"] = Shift;
 
-                if (Param != null)
-                {
-                    switch (Param.Count)
-                    {
-                        case 4:
-                            json_cmd["PARAM1"] = Convert.ToDouble(Param[0]);
-                            json_cmd["PARAM2"] = Convert.ToDouble(Param[1]);
-                            json_cmd["PARAM3"] = Convert.ToDouble(Param[2]);
-                            json_cmd["PARAM4"] = Convert.ToDouble(Param[3]);
-                            break;
-                        case 3:
-                            json_cmd["PARAM1"] = Convert.ToDouble(Param[0]);
-                            json_cmd["PARAM2"] = Convert.ToDouble(Param[1]);
-                            json_cmd["PARAM3"] = Convert.ToDouble(Param[2]);
-                            break;
-                        case 2:
-                            json_cmd["PARAM1"] = Convert.ToDouble(Param[0]);
-                            json_cmd["PARAM2"] = Convert.ToDouble(Param[1]);
-                            break;
-                        case 1:
-                            json_cmd["PARAM1"] = Convert.ToDouble(Param[0]);
-                            break;
-                    }
-                }
+				int i = 1;
+
+				foreach (var param in Params)
+				{
+					double valorD;
+					int valorI;
+					if (int.TryParse(param, out valorI))
+						json_cmd["PARAM" + i.ToString()] = valorI;
+					else if (double.TryParse(param, out valorD))
+						json_cmd["PARAM" + i.ToString()] = valorD;
+					else
+						json_cmd["PARAM" + i.ToString()] = param.ToString();
+
+					i++;
+				}
 
                 JObject res = SendCommand(json_cmd);
 
