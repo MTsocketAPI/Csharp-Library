@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Net.Sockets;
 using System.Text;
+using MTsocketAPI5;
 
 namespace MTsocketAPI.MT5
 {
@@ -900,7 +901,43 @@ namespace MTsocketAPI.MT5
                 throw;
             }
         }
-        
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="FromDate">The date from which you want to request news</param>
+		/// <param name="ToDate">The date to which you want to request news</param>
+		/// <param name="Currency">(Optional) Country currency code name. For example: EUR, USD and so on</param>
+		/// <param name="Country_code">(Optional) Country code name (ISO 3166-1 alpha-2). “US”, “FR” and so on.</param>
+		/// <returns></returns>
+		public CalendarList CalendarList(DateTime FromDate, DateTime ToDate, string Currency = "", string Country_code = "")
+        {
+			try
+			{
+				JObject json_cmd = new JObject();
+				json_cmd["MSG"] = "CALENDAR_LIST";
+				json_cmd["FROM_DATE"] = FromDate.ToString("yyyy.MM.dd HH:mm:ss");
+				json_cmd["TO_DATE"] = ToDate.ToString("yyyy.MM.dd HH:mm:ss");
+                if (Currency != "") json_cmd["CURRENCY"] = Currency;
+				if (Country_code != "") json_cmd["COUNTRY_CODE"] = Country_code;
+
+				JObject res = SendCommand(json_cmd);
+
+				if (res["ERROR_ID"].ToString() == "0")
+				{
+					return JsonConvert.DeserializeObject<CalendarList>(res.ToString());
+				}
+				else
+				{
+					throw new Exception("Error with the command sent. ERROR_ID: " + res["ERROR_ID"] + " ERROR_DESCRIPTION: " + res["ERROR_DESCRIPTION"]);
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+
         /// <summary>
         /// Start streaming prices from a list of symbols
         /// </summary>
