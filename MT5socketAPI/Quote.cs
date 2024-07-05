@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,4 +33,18 @@ namespace MTsocketAPI.MT5
             return JsonConvert.SerializeObject(this);
         }
     }
+
+	public class OHLC_Req
+	{
+        //public string MSG { get; set; }
+        [Required]
+		public string SYMBOL { get; set; }
+		[Required]
+		public string TIMEFRAME { get; set; }
+		public int? DEPTH { get; set; }
+		public override string ToString()
+		{
+			return JsonConvert.SerializeObject(this);
+		}
+	}
 }

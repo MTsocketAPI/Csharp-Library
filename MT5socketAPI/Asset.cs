@@ -43,8 +43,10 @@ namespace MTsocketAPI.MT5
         public string CURRENCY_MARGIN { get; set; }
         public string DESCRIPTION { get; set; }
         public string PATH { get; set; }
+		public List<Dictionary<string, string>> SESSION_QUOTE { get; set; }
+		public List<Dictionary<string, string>> SESSION_TRADE { get; set; }
 
-        public override string ToString()
+		public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
         }
