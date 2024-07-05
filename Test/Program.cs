@@ -80,10 +80,6 @@ namespace Test
                 TradeResult close = mt5.OrderClose(buy.ORDER);
                 Console.WriteLine("Result:" + close.ToString());
 
-                //bool result = mt5.TrackOHLC(new List<string>() { asset.NAME },TimeFrame.PERIOD_M1);
-                //bool result2 = mt5.TrackPrices(new List<string>() { asset.NAME });
-                //bool result3 = mt5.TrackOrderEvent(true);
-
                 Console.WriteLine("Finished!");
             }
             catch (Exception ex)
@@ -91,11 +87,6 @@ namespace Test
                 Console.WriteLine($"Error: {ex.Message}");
                 return;
             }
-
-            //do
-            //{
-            //    System.Threading.Thread.Sleep(1000);
-            //} while (true);
         }
 
         private static void Tt_OnOrderEvent(object? sender, OrderEvent e)
