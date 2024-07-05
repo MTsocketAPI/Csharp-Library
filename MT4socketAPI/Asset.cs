@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MTsocketAPI.MT4
 {
-    public class Asset
+	public class Asset
     {
         //public string MSG { get; set; }
         public string NAME { get; set; }
@@ -39,7 +39,9 @@ namespace MTsocketAPI.MT4
         public string CURRENCY_MARGIN { get; set; }
         public string DESCRIPTION { get; set; }
         public string PATH { get; set; }
-        public override string ToString()
+		public List<Dictionary<string,string>> SESSION_QUOTE { get; set; }
+		public List<Dictionary<string, string>> SESSION_TRADE { get; set; }
+		public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
         }
