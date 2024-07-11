@@ -23,4 +23,23 @@ namespace MTsocketAPI.MT5
         }
 
     }
+
+	public class MARKETBOOK
+	{
+		public double PRICE { get; set; }
+		public int VOLUME { get; set; }
+		public double VOLUMEREAL { get; set; }
+		public string TYPE { get; set; }
+	}
+
+	public class MarketDepth
+	{
+		//public string MSG { get; set; }
+		public string SYMBOL { get; set; }
+		public List<MARKETBOOK> MARKET_BOOK { get; set; }
+		public override string ToString()
+		{
+			return JsonConvert.SerializeObject(this);
+		}
+	}
 }
