@@ -685,7 +685,7 @@ namespace MTsocketAPI.MT5
 		/// <param name="FromDate">From date</param>
 		/// <param name="ToDate">To date</param>
 		/// <returns>List of Orders & Deals</returns>
-		public List<Order_Deal> GetTradeHistoryOrdersDeals(DateTime FromDate, DateTime ToDate)
+		public List<OrderDeal> GetTradeHistoryOrdersDeals(DateTime FromDate, DateTime ToDate)
 		{
 			try
 			{
@@ -699,7 +699,7 @@ namespace MTsocketAPI.MT5
 
 				if (res["ERROR_ID"].ToString() == "0")
 				{
-					return JsonConvert.DeserializeObject<List<Order_Deal>>(res[TradeHistoryMode.ORDERS_DEALS.ToString()].ToString());
+					return JsonConvert.DeserializeObject<List<OrderDeal>>(res[TradeHistoryMode.ORDERS_DEALS.ToString()].ToString());
 				}
 				else
 				{
@@ -1116,7 +1116,7 @@ namespace MTsocketAPI.MT5
 				{
 					JObject jo = new JObject();
 					jo["SYMBOL"] = item.SYMBOL;
-					jo["TIMEFRAME"] = item.TIMEFRAME;
+					jo["TIMEFRAME"] = item.TIMEFRAME.ToString();
 					if (item.DEPTH != null) jo["DEPTH"] = item.DEPTH;
 					ja.Add(jo);
 				}
@@ -1264,7 +1264,7 @@ namespace MTsocketAPI.MT5
 		TerminalInfo GetTerminalInfo();
 		List<Deal> GetTradeHistoryDeals(DateTime FromDate, DateTime ToDate);
 		List<Order> GetTradeHistoryOrders(DateTime FromDate, DateTime ToDate);
-		List<Order_Deal> GetTradeHistoryOrdersDeals(DateTime FromDate, DateTime ToDate);
+		List<OrderDeal> GetTradeHistoryOrdersDeals(DateTime FromDate, DateTime ToDate);
 		List<Position> GetTradeHistoryPositions(DateTime FromDate, DateTime ToDate);
 		List<double> MA_Indicator(string Symbol, TimeFrame tf, int MA_Period, int MA_Shift, MA_Method MA_Method, Applied_Price Applied_Price, int Shift, int Num = 1);
 		TradeResult OrderClose(long Ticket, double Volume = 0, double Price = 0, double Slippage = 0);

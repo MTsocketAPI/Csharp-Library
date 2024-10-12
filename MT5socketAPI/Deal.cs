@@ -32,7 +32,7 @@ namespace MTsocketAPI.MT5
 
     }
 
-    public class Order_Deal
+    public class OrderDeal
     {
         public string TIME { get; set; }
         public long TICKET { get; set; }

@@ -24,7 +24,7 @@ namespace MTsocketAPI.MT5
 
     }
 
-	public class MARKETBOOK
+	public class MarketBook
 	{
 		public double PRICE { get; set; }
 		public int VOLUME { get; set; }
@@ -36,7 +36,7 @@ namespace MTsocketAPI.MT5
 	{
 		//public string MSG { get; set; }
 		public string SYMBOL { get; set; }
-		public List<MARKETBOOK> MARKET_BOOK { get; set; }
+		public List<MarketBook> MARKET_BOOK { get; set; }
 		public override string ToString()
 		{
 			return JsonConvert.SerializeObject(this);

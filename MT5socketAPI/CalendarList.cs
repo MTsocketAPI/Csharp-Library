@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTsocketAPI5
+namespace MTsocketAPI.MT5
 {
 	// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-	public class EVENT
+	public class Event
 	{
 		public string TIME { get; set; }
 		public int EVENT_COUNTRY_ID { get; set; }
@@ -35,7 +35,7 @@ namespace MTsocketAPI5
 	public class CalendarList
 	{
 		public string MSG { get; set; }
-		public List<EVENT> EVENTS { get; set; }
+		public List<Event> EVENTS { get; set; }
 		public int ERROR_ID { get; set; }
 		public string ERROR_DESCRIPTION { get; set; }
 	}

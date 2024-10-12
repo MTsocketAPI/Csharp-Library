@@ -40,7 +40,7 @@ namespace MTsocketAPI.MT5
         [Required]
 		public string SYMBOL { get; set; }
 		[Required]
-		public string TIMEFRAME { get; set; }
+		public TimeFrame TIMEFRAME { get; set; }
 		public int? DEPTH { get; set; }
 		public override string ToString()
 		{
