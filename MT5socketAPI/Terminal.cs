@@ -305,23 +305,23 @@ namespace MTsocketAPI.MT5
 
 				ListenMTData();
 
-				JObject json_cmd = new JObject();
-				json_cmd["MSG"] = "VERSION";
-				JObject res = SendCommand(json_cmd);
+				//JObject json_cmd = new JObject();
+				//json_cmd["MSG"] = "VERSION";
+				//JObject res = SendCommand(json_cmd);
 
-				if (res["ERROR_ID"].ToString() == "0")
-				{
-					Version = res["NUMBER"].ToString();
+				//if (res["ERROR_ID"].ToString() == "0")
+				//{
+				//	Version = res["NUMBER"].ToString();
 
-					if (Convert.ToDouble(Version) < 5.21)
-					{
-						throw new Exception("This API version needs at least MTsocketAPI 5.21 version");
-					}
-				}
-				else
-				{
-					throw new Exception("Error with the command sent. ERROR_ID: " + res["ERROR_ID"] + " ERROR_DESCRIPTION: " + res["ERROR_DESCRIPTION"]);
-				}
+				//	if (Convert.ToDouble(Version) < 5.21)
+				//	{
+				//		throw new Exception("This API version needs at least MTsocketAPI 5.21 version");
+				//	}
+				//}
+				//else
+				//{
+				//	throw new Exception("Error with the command sent. ERROR_ID: " + res["ERROR_ID"] + " ERROR_DESCRIPTION: " + res["ERROR_DESCRIPTION"]);
+				//}
 			}
 			catch (Exception ex)
 			{
