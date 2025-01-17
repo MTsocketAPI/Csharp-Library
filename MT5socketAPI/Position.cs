@@ -30,6 +30,7 @@ namespace MTsocketAPI.MT5
         public long REASON { get; set; }
         public double PRICE_CURRENT { get; set; }
         public string EXTERNAL_ID { get; set; }
+        public double CHANGE { get; set; }
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);

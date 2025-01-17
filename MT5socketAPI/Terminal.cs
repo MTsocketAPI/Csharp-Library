@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Net.Sockets;
 using System.Text;
+using System.Globalization;
 
 namespace MTsocketAPI.MT5
 {
@@ -313,7 +314,7 @@ namespace MTsocketAPI.MT5
 				//{
 				//	Version = res["NUMBER"].ToString();
 
-				//	if (Convert.ToDouble(Version) < 5.21)
+				//	if (Convert.ToDouble(Version,CultureInfo.InvariantCulture) < 5.21)
 				//	{
 				//		throw new Exception("This API version needs at least MTsocketAPI 5.21 version");
 				//	}
@@ -760,7 +761,7 @@ namespace MTsocketAPI.MT5
 		/// <param name="Comment">Order Comment (optional)</param>
 		/// <param name="MagicNr">Magic Number (optional)</param>
 		/// <param name="Expiration">Order Expiration Date. Only for limit or stop orders (optional)</param>
-		public TradeResult SendOrder(string Symbol, double Volume, OrderType Type, double Price = 0, double SL = 0, double TP = 0, double Slippage = 0, string Comment = "", int MagicNr = 0, string Expiration = "1970/01/01 00:00")
+		public TradeResult SendOrder(string Symbol, double Volume, OrderType Type, double Price = 0, double SL = 0, double TP = 0, double Slippage = 0, string Comment = "", int MagicNr = 0, string Expiration = "1970/01/01 00:00", bool Async = false)
 		{
 			try
 			{
@@ -776,8 +777,9 @@ namespace MTsocketAPI.MT5
 				if (Comment != "") json_cmd["COMMENT"] = Comment;
 				if (MagicNr > 0) json_cmd["MAGICNR"] = MagicNr;
 				if (Expiration != "1970/01/01 00:00") json_cmd["EXPIRATION"] = Expiration;
+                if (Async != false) json_cmd["ASYNC"] = true;
 
-				JObject res = SendCommand(json_cmd);
+                JObject res = SendCommand(json_cmd);
 
 				if (res["ERROR_ID"].ToString() == "0")
 				{
@@ -800,7 +802,7 @@ namespace MTsocketAPI.MT5
 		/// <param name="Ticket">Ticket Number</param>
 		/// <param name="SL">Stop loss price (optional)</param>
 		/// <param name="TP">Take profit price (optional)</param>
-		public TradeResult OrderModify(long Ticket, double SL = 0, double TP = 0)
+		public TradeResult OrderModify(long Ticket, double SL = 0, double TP = 0, bool Async = false)
 		{
 			try
 			{
@@ -809,8 +811,9 @@ namespace MTsocketAPI.MT5
 				json_cmd["TICKET"] = Ticket;
 				if (SL > 0) json_cmd["SL"] = SL;
 				if (TP != 0) json_cmd["TP"] = TP;
+                if (Async != false) json_cmd["ASYNC"] = true;
 
-				JObject res = SendCommand(json_cmd);
+                JObject res = SendCommand(json_cmd);
 
 				if (res["ERROR_ID"].ToString() == "0")
 				{
@@ -835,7 +838,7 @@ namespace MTsocketAPI.MT5
 		/// <param name="Volume">Volume size (optional)</param>
 		/// <param name="Price">Desired Price (optional)</param>
 		/// <param name="Slippage">Max lippage (optional)</param>
-		public TradeResult OrderClose(long Ticket, double Volume = 0, double Price = 0, double Slippage = 0)
+		public TradeResult OrderClose(long Ticket, double Volume = 0, double Price = 0, double Slippage = 0, bool Async = false)
 		{
 			try
 			{
@@ -845,8 +848,9 @@ namespace MTsocketAPI.MT5
 				if (Volume > 0) json_cmd["VOLUME"] = Volume;
 				if (Price != 0) json_cmd["PRICE"] = Price;
 				if (Slippage != 0) json_cmd["SLIPPAGE"] = Slippage;
+                if (Async != false) json_cmd["ASYNC"] = true;
 
-				JObject res = SendCommand(json_cmd);
+                JObject res = SendCommand(json_cmd);
 
 				if (res["ERROR_ID"].ToString() == "0")
 				{
@@ -1267,12 +1271,12 @@ namespace MTsocketAPI.MT5
 		List<OrderDeal> GetTradeHistoryOrdersDeals(DateTime FromDate, DateTime ToDate);
 		List<Position> GetTradeHistoryPositions(DateTime FromDate, DateTime ToDate);
 		List<double> MA_Indicator(string Symbol, TimeFrame tf, int MA_Period, int MA_Shift, MA_Method MA_Method, Applied_Price Applied_Price, int Shift, int Num = 1);
-		TradeResult OrderClose(long Ticket, double Volume = 0, double Price = 0, double Slippage = 0);
-		TradeResult OrderModify(long Ticket, double SL = 0, double TP = 0);
+		TradeResult OrderClose(long Ticket, double Volume = 0, double Price = 0, double Slippage = 0, bool Async = false);
+		TradeResult OrderModify(long Ticket, double SL = 0, double TP = 0, bool Async = false);
 		List<Rates> PriceHistory(string Symbol, TimeFrame tf, DateTime FromDate, DateTime ToDate);
 		JObject SendCommand(JObject cmd);
 		Task<JObject> SendCommandAsync(string host, int port, JObject cmd);
-		TradeResult SendOrder(string Symbol, double Volume, OrderType Type, double Price = 0, double SL = 0, double TP = 0, double Slippage = 0, string Comment = "", int MagicNr = 0, string Expiration = "1970/01/01 00:00");
+		TradeResult SendOrder(string Symbol, double Volume, OrderType Type, double Price = 0, double SL = 0, double TP = 0, double Slippage = 0, string Comment = "", int MagicNr = 0, string Expiration = "1970/01/01 00:00", bool Async = false);
 		bool TrackOHLC(List<OHLC_Req> ohlc_request);
 		bool TrackOrderEvent();
 		bool TrackOrderEvent(bool enable);
