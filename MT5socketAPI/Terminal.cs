@@ -416,6 +416,39 @@ namespace MTsocketAPI.MT5
 
 		}
 
+        /// <summary>
+        /// Get Information from an opened order
+        /// </summary>
+        /// <returns>Opened order</returns>
+        public Position getOrderInfo(long ticket)
+		{
+            try
+            {
+                JObject json_cmd = new JObject();
+                json_cmd["MSG"] = "ORDER_INFO";
+                json_cmd["TICKET"] = ticket;
+                JObject res = SendCommand(json_cmd);
+
+                if (res["ERROR_ID"].ToString() == "0")
+                {
+                    List<Position> opened = JsonConvert.DeserializeObject<List<Position>>(res["OPENED"].ToString());
+					if (opened.Count > 0)
+					{
+                        return opened.First();
+                    }
+					else return new Position();
+                }
+                else
+                {
+                    throw new Exception("Error with the GetOpenedOrders command. ERROR_ID: " + res["ERROR_ID"] + " ERROR_DESCRIPTION: " + res["ERROR_DESCRIPTION"]);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 		/// <summary>
 		/// Get Opened Positions
 		/// </summary>
